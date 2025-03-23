@@ -40,8 +40,19 @@ def is_top_domain(line):
     line = line.strip()
     if not line.startswith("server=/"):
         return False
-    # 修复正则表达式匹配逻辑
-    return re.match(r'^server=/.*\.top/114\.114\.114\.114$', line)  # <mcsymbol name="is_top_domain" filename="remove_top_domains.py" path="e:\Github\remove_top_domains.py" startline="34" type="function"></mcsymbol>
+    return re.match(r'^server=/.*\.top/114\.114\.114\.114$', line)
+
+# 新增中文检测函数
+def contains_chinese(line):
+    """检测域名部分包含中文字符的行"""
+    line = line.strip()
+    # 增加server=/前缀检查
+    if not line.startswith("server=/"):
+        return False
+    # 精确提取域名部分（两个/之间的内容）
+    domain_part = line.split('/')[1]
+    # 扩展中文Unicode范围（包含基本汉字和扩展A区）
+    return re.search(r'[\u4e00-\u9fff\u3400-\u4dbf]', domain_part)
 
 def main():
     config_path = get_config_path()
@@ -57,25 +68,48 @@ def main():
         removed = 0
         original_lines = lines.copy()
         for i, line in enumerate(original_lines):
+            # 原有处理.top域名的逻辑
             if is_top_domain(line):
                 domain = line.split('/')[1].rstrip('/')
                 new_lines = [l for l in lines if l != line]
                 
-                # 修复1：移除newline参数，添加文件同步
+                # 写入修改后的配置
                 with open(config_path, 'w', encoding='utf-8') as f:
                     f.writelines(new_lines)
-                    f.flush()  # 强制刷新缓冲区
-                    os.fsync(f.fileno())  # 确保写入磁盘
+                    f.flush()
+                    os.fsync(f.fileno())
                 
-                # 新增延迟防止文件锁冲突
-                time.sleep(0.5)  # 适当缩短等待时间
+                time.sleep(0.5)
 
-                # 修复git操作
+                # 提交包含中文的行
                 subprocess.run(
                     ['git', 'add', 'accelerated-domains.china.conf'],
                     cwd=target_dir,
                     check=True
                 )
+                
+            if contains_chinese(line):  # 将elif改为独立if判断
+                domain = line.split('/')[1].rstrip('/')
+                # 添加重复行检查
+                if line not in lines:
+                    continue
+                new_lines = [l for l in lines if l != line]
+                
+                # 写入修改后的配置
+                with open(config_path, 'w', encoding='utf-8') as f:
+                    f.writelines(new_lines)
+                    f.flush()
+                    os.fsync(f.fileno())
+                
+                time.sleep(0.5)
+
+                # 添加缺失的git add操作
+                subprocess.run(
+                    ['git', 'add', 'accelerated-domains.china.conf'],
+                    cwd=target_dir,
+                    check=True
+                )
+                # 保持commit操作不变
                 subprocess.run(
                     ['git', 'commit', '-m', f'accelerated-domains: remove {domain}'],
                     cwd=target_dir,
@@ -85,9 +119,9 @@ def main():
                 print_status(STYLES['success'], f"已删除并提交: {domain}")
                 removed += 1
                 lines = new_lines
-                time.sleep(1)  # 新增提交后等待
+                time.sleep(1)
 
-        print_status(STYLES['info'], f"共删除 {removed} 个.top域名")
+        print_status(STYLES['info'], f"共删除 {removed} 个域名（包含.top和中文字符）")  # 修改统计信息
         
     except Exception as e:
         print_status(STYLES['error'], f"处理失败: {str(e)}")
