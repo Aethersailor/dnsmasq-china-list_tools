@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Bing搜索增强终极版
+// @name         Bing 搜索增强
 // @namespace    http://tampermonkey.net/
 // @version      4.0
 // @description  Bing搜索增强：智能翻页/快捷操作/结果优化

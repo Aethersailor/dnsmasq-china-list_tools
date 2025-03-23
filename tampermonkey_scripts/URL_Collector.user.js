@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         URL Collector (Search Engines)
+// @name         URL 收集器 (搜索引擎专用)
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  自动收集页面链接并复制规范化域名到剪贴板（仅限搜索引擎）
