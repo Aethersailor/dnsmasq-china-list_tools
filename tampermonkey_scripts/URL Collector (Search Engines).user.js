@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      1.0
 // @description  自动收集页面链接并复制规范化域名到剪贴板（仅限搜索引擎）
-// @author       YourName
+// @author       Aethersailor
 // @match        *://www.baidu.com/*
 // @match        *://www.bing.com/*
 // @match        *://*.google.com/*
