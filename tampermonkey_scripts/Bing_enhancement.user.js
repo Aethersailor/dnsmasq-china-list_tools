@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      4.0
 // @description  Bing搜索增强：智能翻页/快捷操作/结果优化
-// @author       YourName
+// @author       Aethersailor
 // @match        *://www.bing.com/search*
 // @grant        GM_setValue
 // @grant        GM_getValue
