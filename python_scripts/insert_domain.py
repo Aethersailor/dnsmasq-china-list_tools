@@ -425,15 +425,15 @@ def insert_domain():
                     PROCESSING_QUEUE.extend(new_domains)
         
             # 处理队列（原有逻辑完全保留）
-            while PROCESSING_QUEUE:
+            if PROCESSING_QUEUE:  # 将while改为if
                 current_domain = PROCESSING_QUEUE.pop(0)
                 print_status(STYLES['info'], f"处理剪贴板域名: {current_domain}")
                 process_domain(current_domain)
                 CLIPBOARD_CACHE.add(current_domain)
                 print_status(STYLES['info'], "---")
-                time.sleep(0.5)
+                time.sleep(0.5)  # 保留间隔防止资源竞争
         
-            time.sleep(0.1)
+            time.sleep(0.1)  # 保持循环频率
 
     while True:
         try:
