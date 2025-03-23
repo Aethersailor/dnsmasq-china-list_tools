@@ -345,8 +345,8 @@ def insert_domain():
 
     def process_domain(domain):
         # 修改为同时过滤.cn和.top域名
-        if domain.endswith(('.cn', '.top')):
-            print_status(STYLES['warning'], ".cn或.top域名自动跳过")
+        if domain.endswith(('.cn', '.top', '.xn--fiqs8s')):
+            print_status(STYLES['warning'], ".cn/.top/.xn--fiqs8s域名自动跳过")
             return
         if check_existing_entry(config_path, domain):
             print_status(STYLES['warning'], "规则已存在，跳过处理")
