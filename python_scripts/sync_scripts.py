@@ -20,13 +20,13 @@ def main():
     
     # 配置路径
     source_dir = os.path.dirname(os.path.abspath(__file__))
-    target_dir = os.path.join(source_dir, "Custom_OpenClash_Rules", "py", "geosite_tools")
+    target_dir = os.path.join(source_dir, "dnsmasq-china-list_tools", "python_scripts")
     scripts = [
         "domain_cleaner.py", 
         "insert_domain.py", 
         "shuffle_domains.py",
         "domain_validator.py",
-        "insert_domain_clipboard.py",
+        "remove_top_domains.py",
         os.path.basename(__file__)  # 包含脚本自身
     ]
 
