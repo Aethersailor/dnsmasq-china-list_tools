@@ -42,7 +42,7 @@ def extract_main_domain(line):
     main_domain = ext.registered_domain.lower()
     
     # 修改域名后缀过滤条件
-    if not main_domain or main_domain.endswith(('.cn', '.top')):  # 添加.top后缀过滤
+    if not main_domain or main_domain.endswith(('.cn', '.top', '.xn--fiqs8s')):  # 添加.top后缀过滤
         return None
     # 确保一级域名（如example.com）
     return main_domain if main_domain.count('.') == 1 else None

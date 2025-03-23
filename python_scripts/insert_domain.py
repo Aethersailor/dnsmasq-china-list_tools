@@ -145,8 +145,21 @@ def print_section(title):
 def print_status(style, message):
     print(f"[{datetime.now().strftime('%H:%M:%S')}] {style}: {message}")
 def extract_domain(url):
+    """提取域名并转换为punycode格式"""
     ext = tldextract.extract(url)
-    return f"{ext.domain}.{ext.suffix}"
+    
+    # 新增punycode编码处理
+    def to_punycode(part):
+        try:
+            return part.encode('idna').decode('utf-8')
+        except UnicodeError:
+            return part
+    
+    domain_part = to_punycode(ext.domain)
+    suffix_part = to_punycode(ext.suffix)
+    
+    return f"{domain_part}.{suffix_part}"
+    
 def get_ip_from_ns(ns_domain, geoip_db_path):  # 新增geoip参数
     """带缓存的双重验证获取IPv4地址"""
     current_time = time.time()
